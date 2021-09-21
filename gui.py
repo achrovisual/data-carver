@@ -39,7 +39,6 @@ class Carver_GUI(object):
         self.window.configure(background = "#ececec")
 
         # Set window size
-        self.window.maxsize(807, 405)
         self.window.minsize(807, 405)
 
         # Set title
