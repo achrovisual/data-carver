@@ -354,6 +354,7 @@ class Carver_GUI(object):
         self.file_header_checkbox_11['state'] = 'disabled'
         self.file_header_checkbox_12['state'] = 'disabled'
 
+        self.save_directory_button['state'] = 'disabled'
         self.logs_button['state'] = 'disabled'
 
     def enable_buttons(self):
