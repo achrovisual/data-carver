@@ -7,6 +7,7 @@ class Carver():
         self.save_directory = str(save_directory.get())
 
         self.file_header_list = file_header_list
+        self.recovery_log = []
 
         print(self.scan_target)
         print(self.save_directory)
@@ -28,6 +29,8 @@ class Carver():
                 try:
                     recovered_file_record = [None, None, None, None]
 
+                    temp_log = ''
+
                     drive.seek(start_sector * sector_size)
 
                     sector_file_header = ''
@@ -38,6 +41,8 @@ class Carver():
                         if sector_file_header[:len(self.file_header_list[file_type][0])] == self.file_header_list[file_type][0]:
 
                             print(file_type.upper() + ' File Signature Found at sector', start_sector, end="")
+
+                            temp_log += str(file_type.upper() + ' File Signature Found at sector ' + str(start_sector))
 
                             recovery_counter[file_type] += 1
 
@@ -69,12 +74,16 @@ class Carver():
                                 if sector_file_footer == self.file_header_list[file_type][1]:
 
                                     recovering = False
-                                    recovered_file_record[1] = str("{:.2f}".format(round(max_file_size_counter * 0.001, 2))) + ' KB' 
+                                    recovered_file_record[1] = str("{:.2f}".format(round(max_file_size_counter * 0.001, 2))) + ' KB'
 
                                     recovered_file.close()
                                     recovered_files_list.append(recovered_file_record)
 
                                     print(" - Recovery Successful!")
+
+                                    temp_log += str(" - Recovery Successful!")
+                                    self.recovery_log.append(temp_log)
+
 
                                 max_file_size_counter += 1
 
@@ -87,6 +96,9 @@ class Carver():
                                 recovered_files_list.append(recovered_file_record)
                                 print(" - Recovery Failed")
 
+                                temp_log +=  str(" - Recovery Successful!")
+                                self.recovery_log.append(temp_log)
+
                 except:
                     pass
 
@@ -94,3 +106,6 @@ class Carver():
                 start_sector += 1
 
         return recovered_files_list
+
+    def get_log(self):
+        return self.recovery_log

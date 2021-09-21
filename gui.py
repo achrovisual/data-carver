@@ -1,10 +1,11 @@
 from tkinter import filedialog
 from tkinter import ttk
+from tkinter import messagebox
 from tkinter import *
 
 from PIL import ImageTk, Image
 
-import psutil, re
+import psutil, re, threading, platform
 
 import carver
 
@@ -16,6 +17,7 @@ class Carver_GUI(object):
 
         self.file_header_list = {}
         self.file_list = []
+        self.recovery_log = ''
 
         self.png_flag = BooleanVar()
         self.jpg_flag = BooleanVar()
@@ -125,53 +127,53 @@ class Carver_GUI(object):
         self.file_header_column_1 = Frame(self.file_header_frame, background = "#ececec", width = 64, height = 71)
         self.file_header_column_1.pack(side = LEFT, anchor = "sw")
 
-        self.file_header_radio_1 = Checkbutton(self.file_header_column_1, background = "#ececec", text="PNG", variable = self.png_flag, command = lambda:print(self.png_flag.get()))
-        self.file_header_radio_1.pack(anchor = "w", pady = (0, 1))
+        self.file_header_checkbox_1 = Checkbutton(self.file_header_column_1, background = "#ececec", text="PNG", variable = self.png_flag, command = lambda:print(self.png_flag.get()))
+        self.file_header_checkbox_1.pack(anchor = "w", pady = (0, 1))
 
-        self.file_header_radio_2 = Checkbutton(self.file_header_column_1, background = "#ececec", text="JPG", variable = self.jpg_flag, command = lambda:print(self.jpg_flag.get()))
-        self.file_header_radio_2.pack(anchor = "w", pady = (1, 1))
+        self.file_header_checkbox_2 = Checkbutton(self.file_header_column_1, background = "#ececec", text="JPG", variable = self.jpg_flag, command = lambda:print(self.jpg_flag.get()))
+        self.file_header_checkbox_2.pack(anchor = "w", pady = (1, 1))
 
-        self.file_header_radio_3 = Checkbutton(self.file_header_column_1, background = "#ececec", text="BMP", variable = self.bmp_flag, command = lambda:print(self.bmp_flag.get()))
-        self.file_header_radio_3.pack(anchor = "w", pady = (1, 0))
+        self.file_header_checkbox_3 = Checkbutton(self.file_header_column_1, background = "#ececec", text="BMP", variable = self.bmp_flag, command = lambda:print(self.bmp_flag.get()))
+        self.file_header_checkbox_3.pack(anchor = "w", pady = (1, 0))
 
         # Set file header column 2
         self.file_header_column_2 = Frame(self.file_header_frame, background = "#ececec", width = 64, height = 71)
         self.file_header_column_2.pack(side = LEFT, anchor = "sw")
 
-        self.file_header_radio_4 = Checkbutton(self.file_header_column_2, background = "#ececec", text="GIF", variable = self.gif_flag, command = lambda:print(self.gif_flag.get()))
-        self.file_header_radio_4.pack(anchor = "w", pady = (0, 1))
+        self.file_header_checkbox_4 = Checkbutton(self.file_header_column_2, background = "#ececec", text="GIF", variable = self.gif_flag, command = lambda:print(self.gif_flag.get()))
+        self.file_header_checkbox_4.pack(anchor = "w", pady = (0, 1))
 
-        self.file_header_radio_5 = Checkbutton(self.file_header_column_2, background = "#ececec", text="MP3", variable = self.mp3_flag, command = lambda:print(self.mp3_flag.get()))
-        self.file_header_radio_5.pack(anchor = "w", pady = (1, 1))
+        self.file_header_checkbox_5 = Checkbutton(self.file_header_column_2, background = "#ececec", text="MP3", variable = self.mp3_flag, command = lambda:print(self.mp3_flag.get()))
+        self.file_header_checkbox_5.pack(anchor = "w", pady = (1, 1))
 
-        self.file_header_radio_6 = Checkbutton(self.file_header_column_2, background = "#ececec", text="MP4", variable = self.mp4_flag, command = lambda:print(self.mp4_flag.get()))
-        self.file_header_radio_6.pack(anchor = "w", pady = (1, 0))
+        self.file_header_checkbox_6 = Checkbutton(self.file_header_column_2, background = "#ececec", text="MP4", variable = self.mp4_flag, command = lambda:print(self.mp4_flag.get()))
+        self.file_header_checkbox_6.pack(anchor = "w", pady = (1, 0))
 
         # Set file header column 3
         self.file_header_column_3 = Frame(self.file_header_frame, background = "#ececec", width = 64, height = 71)
         self.file_header_column_3.pack(side = LEFT, anchor = "sw")
 
-        self.file_header_radio_7 = Checkbutton(self.file_header_column_3, background = "#ececec", text="PDF", variable = self.pdf_flag, command = lambda:print(self.pdf_flag.get()))
-        self.file_header_radio_7.pack(anchor = "w", pady = (0, 1))
+        self.file_header_checkbox_7 = Checkbutton(self.file_header_column_3, background = "#ececec", text="PDF", variable = self.pdf_flag, command = lambda:print(self.pdf_flag.get()))
+        self.file_header_checkbox_7.pack(anchor = "w", pady = (0, 1))
 
-        self.file_header_radio_8 = Checkbutton(self.file_header_column_3, background = "#ececec", text="RTF", variable = self.rtf_flag, command = lambda:print(self.rtf_flag.get()))
-        self.file_header_radio_8.pack(anchor = "w", pady = (1, 1))
+        self.file_header_checkbox_8 = Checkbutton(self.file_header_column_3, background = "#ececec", text="RTF", variable = self.rtf_flag, command = lambda:print(self.rtf_flag.get()))
+        self.file_header_checkbox_8.pack(anchor = "w", pady = (1, 1))
 
-        self.file_header_radio_9 = Checkbutton(self.file_header_column_3, background = "#ececec", text="DOCX", variable = self.docx_flag, command = lambda:print(self.docx_flag.get()))
-        self.file_header_radio_9.pack(anchor = "w", pady = (1, 0))
+        self.file_header_checkbox_9 = Checkbutton(self.file_header_column_3, background = "#ececec", text="DOCX", variable = self.docx_flag, command = lambda:print(self.docx_flag.get()))
+        self.file_header_checkbox_9.pack(anchor = "w", pady = (1, 0))
 
         # Set file header column 4
         self.file_header_column_4 = Frame(self.file_header_frame, background = "#ececec", width = 64, height = 71)
         self.file_header_column_4.pack(side = LEFT, anchor = "sw")
 
-        self.file_header_radio_10 = Checkbutton(self.file_header_column_4, background = "#ececec", text="DOC", variable = self.doc_flag, command = lambda:print(self.doc_flag.get()))
-        self.file_header_radio_10.pack(anchor = "w", pady = (0, 1))
+        self.file_header_checkbox_10 = Checkbutton(self.file_header_column_4, background = "#ececec", text="DOC", variable = self.doc_flag, command = lambda:print(self.doc_flag.get()))
+        self.file_header_checkbox_10.pack(anchor = "w", pady = (0, 1))
 
-        self.file_header_radio_11 = Checkbutton(self.file_header_column_4, background = "#ececec", text="XLSX", variable = self.xlsx_flag, command = lambda:print(self.xlsx_flag.get()))
-        self.file_header_radio_11.pack(anchor = "w", pady = (1, 1))
+        self.file_header_checkbox_11 = Checkbutton(self.file_header_column_4, background = "#ececec", text="XLSX", variable = self.xlsx_flag, command = lambda:print(self.xlsx_flag.get()))
+        self.file_header_checkbox_11.pack(anchor = "w", pady = (1, 1))
 
-        self.file_header_radio_12 = Checkbutton(self.file_header_column_4, background = "#ececec", text="XLS", variable = self.xls_flag, command = lambda:print(self.xls_flag.get()))
-        self.file_header_radio_12.pack(anchor = "w", pady = (1, 0))
+        self.file_header_checkbox_12 = Checkbutton(self.file_header_column_4, background = "#ececec", text="XLS", variable = self.xls_flag, command = lambda:print(self.xls_flag.get()))
+        self.file_header_checkbox_12.pack(anchor = "w", pady = (1, 0))
 
         # Set action frame
         self.action_frame = Frame(self.bottom_frame, background = "#ececec")
@@ -181,31 +183,66 @@ class Carver_GUI(object):
         self.start_frame = Frame(self.action_frame, background = "#ececec", width = 540, height = 30)
         self.start_frame.pack(pady = (0, 10))
 
-        self.start_button = Button(self.start_frame, background = "#ececec", width = 10, text = "Start", command = self.start)
+        self.start_button = Button(self.start_frame, background = "#ececec", width = 10, text = "Start", command = lambda:threading.Thread(target = self.start, daemon = True).start())
         self.start_button.pack(side = LEFT)
 
-        # Set option frame
-        self.option_frame = Frame(self.action_frame, background = "#ececec", width = 540, height = 30)
-        self.option_frame.pack(pady = (7.5, 0.5))
+        # Set logs frame
+        self.logs_frame = Frame(self.action_frame, background = "#ececec", width = 540, height = 30)
+        self.logs_frame.pack(pady = (7.5, 0.5))
 
-        self.option_button = Button(self.option_frame, background = "#ececec", width = 10, text = "Options")
-        self.option_button.pack(side = LEFT)
+        self.logs_button = Button(self.logs_frame, background = "#ececec", width = 10, text = "View Logs", state = 'disabled', command = lambda:self.view_logs())
+        self.logs_button.pack(side = LEFT)
 
         #Run main loop
         self.window.mainloop()
     def start(self):
         print("Starting...\n")
-        self.file_header_checker()
-        worker = carver.Carver(self.scan_target, self.save_directory, self.file_header_list)
 
-        self.file_list = worker.start()
+        if(self.scan_target.get() != '' and self.save_directory.get() != '' and self.file_header_checker()):
+            self.file_table.delete(*self.file_table.get_children())
+            self.disable_buttons()
+            self.progress_bar.start()
+            worker = carver.Carver(self.scan_target, self.save_directory, self.file_header_list)
 
-        counter = 0
-        for i in self.file_list:
-            self.file_table.insert(parent='', index=counter, iid=counter, text='', values=i)
-            counter += 1
+            self.file_list = worker.start()
 
-        self.file_table.pack()
+            counter = 0
+            for i in self.file_list:
+                self.file_table.insert(parent='', index=counter, iid=counter, text='', values=i)
+                counter += 1
+
+            self.file_table.pack()
+
+            self.recovery_log = worker.get_log()
+            self.logs_button['state'] = 'normal'
+
+
+        else:
+            messagebox.showerror(title='Incomplete Parameters', message='Please select a valid scan target, save directory, and file types to recover.')
+
+        self.progress_bar.stop()
+        self.enable_buttons()
+
+    def view_logs(self):
+        root = Tk()
+        root.title('View Logs')
+
+        root.maxsize(400, 300)
+        root.minsize(400, 300)
+
+        scrollbar = Scrollbar(root)
+        scrollbar.pack(side=RIGHT, fill=Y)
+        textbox = Text(root)
+        textbox.pack()
+
+        for i in self.recovery_log:
+            textbox.insert('1.0', i)
+
+        textbox.config(yscrollcommand=scrollbar.set)
+        scrollbar.config(command=textbox.yview)
+
+        root.mainloop()
+
     def file_header_checker(self):
         self.file_header_list = {}
         if self.png_flag.get():
@@ -244,7 +281,7 @@ class Carver_GUI(object):
         if self.xls_flag.get():
             self.file_header_list['xls'] = [b'\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1']
 
-        print(self.file_header_list)
+        return bool(self.file_header_list)
 
     def select_save_directory(self):
         filename = filedialog.askdirectory()
@@ -258,9 +295,17 @@ class Carver_GUI(object):
         filename = filedialog.askdirectory()
         print(filename)
 
+        reg = ''
+
         for x in partitions:
-            if x[1] == filename:
-                reg = r'^(\/dev\/disk\d{1,})'
+            if x[1] in filename:
+                if platform.system() == 'Darwin':
+                    reg = r'^(\/dev\/disk\d{1,})'
+                elif platform.system() == 'Windows':
+                    reg = r'^\w{1}:'
+                elif platform.system() == 'Linux':
+                    reg = r'^(\/dev\/sd\w{1})'
+
                 self.scan_target.set(re.match(reg, x[0]).group())
                 print(self.scan_target)
 
@@ -289,6 +334,48 @@ class Carver_GUI(object):
 
         self.image_preview.config(image = image, height = 271, width = 215)
         self.image_preview.image = image
+
+    def disable_buttons(self):
+        self.scan_target_textbox['state'] = 'disabled'
+        self.scan_target_button['state'] = 'disabled'
+
+        self.save_directory_textbox['state'] = 'disabled'
+        self.save_directory_button['state'] = 'disabled'
+
+        self.file_header_checkbox_1['state'] = 'disabled'
+        self.file_header_checkbox_2['state'] = 'disabled'
+        self.file_header_checkbox_3['state'] = 'disabled'
+        self.file_header_checkbox_4['state'] = 'disabled'
+        self.file_header_checkbox_5['state'] = 'disabled'
+        self.file_header_checkbox_6['state'] = 'disabled'
+        self.file_header_checkbox_7['state'] = 'disabled'
+        self.file_header_checkbox_8['state'] = 'disabled'
+        self.file_header_checkbox_9['state'] = 'disabled'
+        self.file_header_checkbox_10['state'] = 'disabled'
+        self.file_header_checkbox_11['state'] = 'disabled'
+        self.file_header_checkbox_12['state'] = 'disabled'
+
+        self.logs_button['state'] = 'disabled'
+
+    def enable_buttons(self):
+        self.scan_target_textbox['state'] = 'normal'
+        self.scan_target_button['state'] = 'normal'
+
+        self.save_directory_textbox['state'] = 'normal'
+        self.save_directory_button['state'] = 'normal'
+
+        self.file_header_checkbox_1['state'] = 'normal'
+        self.file_header_checkbox_2['state'] = 'normal'
+        self.file_header_checkbox_3['state'] = 'normal'
+        self.file_header_checkbox_4['state'] = 'normal'
+        self.file_header_checkbox_5['state'] = 'normal'
+        self.file_header_checkbox_6['state'] = 'normal'
+        self.file_header_checkbox_7['state'] = 'normal'
+        self.file_header_checkbox_8['state'] = 'normal'
+        self.file_header_checkbox_9['state'] = 'normal'
+        self.file_header_checkbox_10['state'] = 'normal'
+        self.file_header_checkbox_11['state'] = 'normal'
+        self.file_header_checkbox_12['state'] = 'normal'
 
 if __name__ == '__main__':
     root = Tk()
