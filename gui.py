@@ -5,7 +5,7 @@ from tkinter import *
 
 from PIL import ImageTk, Image
 
-import psutil, re, threading, platform
+import psutil, re, threading, platform, os
 
 import carver
 
@@ -296,17 +296,27 @@ class Carver_GUI(object):
 
         reg = ''
 
-        for x in partitions:
-            if x[1] in filename:
-                if platform.system() == 'Darwin':
-                    reg = r'^(\/dev\/disk\d{1,})'
-                elif platform.system() == 'Windows':
+        if platform.system() == 'Windows':
+            filename = os.path.splitdrive(filename)
+            for x in partitions:
+                if filename[0] in x[1]:
                     reg = r'^\w{1}:'
-                elif platform.system() == 'Linux':
-                    reg = r'^(\/dev\/sd\w{1})'
+                    self.scan_target.set(re.match(reg, x[0]).group())
+                    print(self.scan_target)
 
-                self.scan_target.set(re.match(reg, x[0]).group())
-                print(self.scan_target)
+        else:
+            reg = ''
+
+            for x in partitions:
+                if x[1] in filename:
+                    if platform.system() == 'Darwin':
+                        reg = r'^(\/dev\/disk\d{1,})'
+
+                    elif platform.system() == 'Linux':
+                        reg = r'^(\/dev\/sd\w{1})'
+
+                    self.scan_target.set(re.match(reg, x[0]).group())
+                    print(self.scan_target)
 
     def resize_preview(self, original):
         if original.width > original.height:
@@ -354,7 +364,7 @@ class Carver_GUI(object):
         self.file_header_checkbox_11['state'] = 'disabled'
         self.file_header_checkbox_12['state'] = 'disabled'
 
-        self.save_directory_button['state'] = 'disabled'
+        self.start_button['state'] = 'disabled'
         self.logs_button['state'] = 'disabled'
 
     def enable_buttons(self):
