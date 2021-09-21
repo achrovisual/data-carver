@@ -252,34 +252,34 @@ class Carver_GUI(object):
             self.file_header_list['jpg'] = [b'\xFF\xD8',b'\xFF\xD9']
 
         if self.bmp_flag.get():
-            self.file_header_list['bmp'] = [b'\x42\x4D']
+            self.file_header_list['bmp'] = [b'\x42\x4D', b'']
 
         if self.gif_flag.get():
-            self.file_header_list['gif'] = [b'\x42\x4D']
+            self.file_header_list['gif'] = [b'\x47\x49\x46\x38\x39\x61', b'\x00\x3B']
 
         if self.mp3_flag.get():
-            self.file_header_list['mp3'] = [b'\x49\x44\x33']
+            self.file_header_list['mp3'] = [b'\x49\x44\x33', b'']
 
         if self.mp4_flag.get():
-            self.file_header_list['mp4'] = [b'\x66\x74\x79\x70\x4D\x53\x4E\x56']
+            self.file_header_list['mp4'] = [b'\x66\x74\x79\x70\x69\x73\x6F\x6D', b'']
 
         if self.pdf_flag.get():
             self.file_header_list['pdf'] = [b'\x25\x50\x44\x46', b'\x0A\x25\x25\x45\x4F\x46']
 
         if self.rtf_flag.get():
-            self.file_header_list['rtf'] = [b'\x7B\x5C\x72\x74\x66', b'\x7D']
+            self.file_header_list['rtf'] = [b'\x7B\x5C\x72\x74\x66\x31', b'\x7D']
 
         if self.docx_flag.get():
-            self.file_header_list['docx'] = [b'\x50\x4B\x03\x04\x14\x00\x06\x00']
+            self.file_header_list['docx'] = [b'\x50\x4B\x03\x04\x14\x00\x06\x00', b'\x50\x4B\x05\x06']
 
         if self.doc_flag.get():
-            self.file_header_list['doc'] = [b'\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1']
+            self.file_header_list['doc'] = [b'\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1', b'']
 
         if self.xlsx_flag.get():
-            self.file_header_list['xlsx'] = [b'\x50\x4B\x03\x04\x14\x00\x06\x00']
+            self.file_header_list['xlsx'] = [b'\x50\x4B\x03\x04\x14\x00\x06\x00', b'\x50\x4B\x05\x06']
 
         if self.xls_flag.get():
-            self.file_header_list['xls'] = [b'\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1']
+            self.file_header_list['xls'] = [b'\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1', b'']
 
         return bool(self.file_header_list)
 

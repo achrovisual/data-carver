@@ -23,7 +23,7 @@ class Carver():
 
             sector_size = 512
             recovery_counter = dict((key,0) for key in self.file_header_list.keys())
-            max_file_size = 10000000
+            max_file_size = 100000000
 
             while start_sector < end_sector:
                 try:
@@ -99,7 +99,8 @@ class Carver():
                                 temp_log +=  str(" - Recovery Successful!")
                                 self.recovery_log.append(temp_log)
 
-                except:
+                except Exception as e:
+                    print(e)
                     pass
 
                 # increment the start_sector to move from one sector to another
